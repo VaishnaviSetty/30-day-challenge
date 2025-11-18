@@ -64,7 +64,9 @@ section {
 <section id="dayPagesContainer" style="display:none;"></section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-let unlocked = localStorage.getItem("portalUnlocked") === "true";
+//let unlocked = localStorage.getItem("portalUnlocked") === "true";
+  let unlocked = localStorage.getItem("portalUnlocked") === "true";
+
 function showLockedPopup(){
   dayPagesContainer.innerHTML = `
     <div style='text-align:center;padding:30px;'>
@@ -93,7 +95,8 @@ for(let i=1;i<=30;i++){
   daysSection.appendChild(div);
 }
 function showDay(i){
-  if(!unlocked){showLockedPopup();return;}
+  //if(!unlocked){showLockedPopup();return;}
+    if(!unlocked){showLockedPopup();return;}
   dayPagesContainer.style.display = 'block';
   dayPagesContainer.innerHTML = `
     <h2>Day ${i} Workout</h2>
@@ -107,3 +110,4 @@ function goBack(){
 </script>
 </body>
 </html>
+
