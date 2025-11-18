@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise Forms – 30 Day Challenge</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #F9DDEB;
+    color: #8C5E58;
+    margin: 0;
+    padding-bottom: 100px;
+}
+
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.sheet {
+    width: 100%;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: #8C5E58;
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 10px 5px;
+    cursor: pointer;
+}
+
+#fab {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    background: #8C5E58;
+    color: white;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    z-index: 999;
+}
+</style>
+
+<!-- jsPDF Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+<body>
+
+<h1>Exercise Forms Reference</h1>
+
+<div class="container">
+
+    <a class="btn" href="index.html">← Back to Challenge</a>
+    <button class="btn" onclick="downloadFormsPDF()">Download All Forms (PDF)</button>
+
+    <h2>All Exercise Sheets</h2>
+
+    <img src="images/exercise_forms/batch1.png" class="sheet">
+    <img src="images/exercise_forms/batch2.png" class="sheet">
+    <img src="images/exercise_forms/batch3.png" class="sheet">
+    <img src="images/exercise_forms/batch4.png" class="sheet">
+    <img src="images/exercise_forms/batch5.png" class="sheet">
+    <img src="images/exercise_forms/batch6.png" class="sheet">
+    <img src="images/exercise_forms/batch7.png" class="sheet">
+    <img src="images/exercise_forms/batch8.png" class="sheet">
+
+</div>
+
+<!-- Floating Action Button -->
+<div id="fab" onclick="downloadFormsPDF()">⬇</div>
+
+<script>
+function downloadFormsPDF() {
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: "a4"
+    });
+
+    const sheets = [
+        {src:"images/exercise_forms/batch1.png", title:"Batch 1 – Warm-up"},
+        {src:"images/exercise_forms/batch2.png", title:"Batch 2 – Lower Body"},
+        {src:"images/exercise_forms/batch3.png", title:"Batch 3 – Glutes"},
+        {src:"images/exercise_forms/batch4.png", title:"Batch 4 – Cardio"},
+        {src:"images/exercise_forms/batch5.png", title:"Batch 5 – Upper Body"},
+        {src:"images/exercise_forms/batch6.png", title:"Batch 6 – Yoga & Flow"},
+        {src:"images/exercise_forms/batch7.png", title:"Batch 7 – Core & Stability"},
+        {src:"images/exercise_forms/batch8.png", title:"Batch 8 – Additional Moves"}
+    ];
+
+    let load = sheets.map(data => new Promise(resolve => {
+        let img = new Image();
+        img.src = data.src;
+        img.onload = () => resolve({...data, img});
+    }));
+
+    Promise.all(load).then(items => {
+        items.forEach((item, index) => {
+            if(index > 0) pdf.addPage();
+
+            pdf.setFontSize(20);
+            pdf.text(item.title, 20, 30);
+
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            const maxW = pageWidth - 40;
+            const maxH = pageHeight - 70;
+
+            let ratio = Math.min(maxW / item.img.width, maxH / item.img.height);
+
+            let w = item.img.width * ratio;
+            let h = item.img.height * ratio;
+
+            pdf.addImage(item.img, "PNG", 20, 50, w, h);
+        });
+
+        pdf.save("Exercise-Forms.pdf");
+    });
+}
+
+function downloadDaywisePDF() {
+    alert("Day-wise PDF system is ready to add whenever your daily content is finalized!");
+}
+</script>
+
+</body>
+</html>
